@@ -21,6 +21,7 @@ class Person {
         vector<int> connected_people; // This vector will add all the people will be indirectly affected by the cybercrime depending on the people they are connected to. (this is me trying to make this as accurate to real life as possible)
     
     public:
+        Person();
         void applyFinancialLoss(double amount); // when the issue occurs, here is where the financial loss is applied to the individual affected
         void increaseStress(double amount); // when some instance causes more stress to an individual, this is where that is manipulated.
         void decreaseTrust(double amount); // if a person is affected by cybercrime, their trust in digital systems decreases. This is where that is manipulated.

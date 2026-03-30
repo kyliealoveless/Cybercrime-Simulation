@@ -18,6 +18,7 @@ class Simulation {
         double total_financial_loss; // recording what the total financial loss is combining all individuals. The snapshot will deeply benefit from this
 
     public:
+        Simulation();
         void initializePopulation(int size); // how I can manipulate the size of the population. Should stay at 1000 but who knows
         void triggerCyberCrime(); // incorporating cybercrimes into the simulation. Without this there is no CYBERCRIME simulation
         void RippleEffect(); // adding a ripple effect into the community. This generates the impact of social harm and furthers the point I will make at the end
