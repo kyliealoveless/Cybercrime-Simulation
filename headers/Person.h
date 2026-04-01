@@ -19,9 +19,11 @@ class Person {
         int recovery_time; // when cybercrime strikes, every individual will be assigned an amount of time it will take them to recover depending on the severity of the crime. If additional factors occur that harms the individual, more time will be added to the recovery time.
         bool directly_impacted; // determines whether the individual is someone directly impacted or further removed from the incident
         vector<int> connected_people; // This vector will add all the people will be indirectly affected by the cybercrime depending on the people they are connected to. (this is me trying to make this as accurate to real life as possible)
+            // each individual will have a range of 5-10 connections. The range will be randomized per individual.
     
     public:
         Person();
+        Person(int id, string role);
         void applyFinancialLoss(double amount); // when the issue occurs, here is where the financial loss is applied to the individual affected
         void increaseStress(double amount); // when some instance causes more stress to an individual, this is where that is manipulated.
         void decreaseTrust(double amount); // if a person is affected by cybercrime, their trust in digital systems decreases. This is where that is manipulated.

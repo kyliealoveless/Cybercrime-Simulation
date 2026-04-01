@@ -21,10 +21,10 @@ class Simulation {
         Simulation();
         void initializePopulation(int size); // how I can manipulate the size of the population. Should stay at 1000 but who knows
         void triggerCyberCrime(); // incorporating cybercrimes into the simulation. Without this there is no CYBERCRIME simulation
-        void RippleEffect(); // adding a ripple effect into the community. This generates the impact of social harm and furthers the point I will make at the end
+        void rippleEffect(); // adding a ripple effect into the community. This generates the impact of social harm and furthers the point I will make at the end
         void updateRecovery(); // depending on the individual's situation, their recovery time will be altered
         void recordSnapShot(); // MY FAVORITE ADDITION!! the simulation is running... so what? Here is where the impact is documented (day 0, day 30, day 90, day 180, final results)
-        void runSimulation (int duration); // the start button essentially. Also I can manipulate how long the simulation will run for (6 months).
+        void runSimulation (int duration, int num_individuals); // the start button essentially. Also I can manipulate how long the simulation will run for (6 months).
 
 
 
