@@ -49,4 +49,11 @@ bool Person::isRecovered(){
     // } else {
     // isRecovered = false;
     // }
+
+    if (recovery_time = 0){
+        return true;
+    } else {
+        return false;
+    }
+
 }
