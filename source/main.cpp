@@ -16,8 +16,10 @@ int main() {
 
     // Creating Assignments
 
-    // Simulation SocialHarmImpact;
-    // SocialHarmImpact.runSimulation(180, 1000) // running the simulation for 180 days and 1000 individuals
+    Simulation SocialHarmImpact;
+    SocialHarmImpact.initializePopulation(1000);
+    SocialHarmImpact.triggerCyberCrime();
+    // SocialHarmImpact.runSimulation(180, 1000); // running the simulation for 180 days and 1000 individuals
     
     return 0;
 

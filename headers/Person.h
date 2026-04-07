@@ -29,6 +29,26 @@ class Person {
         void decreaseTrust(double amount); // if a person is affected by cybercrime, their trust in digital systems decreases. This is where that is manipulated.
         void recoverOneMonth(); // this allows manipulation of how much time people have to recover, this can either add or decrease depending on the scenario.
         bool isRecovered(); // if a person is recovered from cybercrime, they will be added to a separate section that will allow fro more analysis on that individual
+    
+
+        // setters
+        // this is so that I can access these variables because otherwise they are stuck in private
+        void setDirectlyImpacted(bool impacted);
+        void setFinancialLoss(double amount);
+        void setStressLevel(double amount);
+        void setTrustIndex(double amount);
+        void setConnectedPeople(vector<int> people);
+
+        // getters
+        int getId();
+        string getRole();
+        double getIncome();
+        double getStressLevel();
+        double getTrustIndex();
+        double getFinancialLoss();
+        int getRecoveryTime();
+        bool isDirectlyImpacted();
+        vector<int> getConnectedPeople();
 
 };
 

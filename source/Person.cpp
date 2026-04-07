@@ -16,6 +16,7 @@ Person::Person(int id, string role){
     financial_loss = 0.0; // dollars
     recovery_time = 0;
     directly_impacted = false;
+    income = 0.0; // I want income to vary based on role 
 
 }
 
@@ -50,10 +51,73 @@ bool Person::isRecovered(){
     // isRecovered = false;
     // }
 
-    if (recovery_time = 0){
+    if (recovery_time == 0){
         return true;
     } else {
         return false;
     }
 
 }
+
+
+// setters
+
+void Person::setDirectlyImpacted(bool impacted){
+    this->directly_impacted = impacted;
+}
+
+void Person::setFinancialLoss(double amount){
+    this->financial_loss = amount;
+}
+
+void Person::setStressLevel(double amount){
+    this->stress_level = amount;
+}
+
+void Person::setTrustIndex(double amount){
+    this->trust_index = amount;
+}
+
+void Person::setConnectedPeople(vector<int> people){
+    this->connected_people = people;
+}
+
+
+// getters
+
+int Person::getId(){
+    return id;
+}
+
+string Person::getRole(){
+    return role;
+}
+
+double Person::getIncome(){
+    return income;
+}
+
+double Person::getStressLevel(){
+    return stress_level;
+}
+
+double Person::getTrustIndex(){
+    return trust_index;
+}
+
+double Person::getFinancialLoss(){
+    return financial_loss;
+}
+
+int Person::getRecoveryTime(){
+    return recovery_time;
+}
+
+bool Person::isDirectlyImpacted(){
+    return directly_impacted;
+}
+
+vector<int> Person::getConnectedPeople(){
+    return connected_people;
+}
+

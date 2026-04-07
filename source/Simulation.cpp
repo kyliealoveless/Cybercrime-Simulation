@@ -1,5 +1,6 @@
 #include "..\headers\Simulation.h"
 #include <fstream>
+#include <cstdlib> // for rand()
 
 // Referencing my past Data Structures Final Project "Amusement Park Simulation"
 
@@ -9,7 +10,27 @@ Simulation::Simulation(){
 
 void Simulation::initializePopulation(int size){
     // 1000 individuals... as of right now this number will not change
+    // this will assign what percentage of he population will get one of the 4 roles
 
+    for (int i = 0; i < size; i++) { // creating the population. I will make sure it is 1000 in main
+
+        string role; // assigning roles throughout the population
+
+        if (i < 500) { // majority will be broad individuals 
+            role = "individuals";
+        } else if (i < 750) { // next most is the working population taking up majority of the world's population
+            role = "employees";
+        } else if (i < 900) {
+            role = "elderly"; // next will be elderly who are the #1 victim of cyber crime
+        } else {
+            role = "creators"; // last will represent creators that get affected through the act of piracy
+        }
+       
+        population.push_back(Person(i, role)); // adding the person with their newly assigned role to the population 
+
+    }
+    
+    
 }
 
 void Simulation::triggerCyberCrime(){
@@ -20,6 +41,22 @@ void Simulation::triggerCyberCrime(){
     // for (population of 1000) { /  rand 0.03 by 1000}
     //
     //
+
+    int victims = population.size() * 0.03; // the victims will be 3% of the population
+
+    for (int i = 0; i < victims; i++) {
+        // looping through the victims to assign a cyber crime effect on the variables
+
+        // I want to randomize the 3% 
+        int random = rand() % population.size();
+
+        // using setters so I can access the private variables
+        // applying new values to the variables when they are randomly assigned
+        population[random].setDirectlyImpacted(true);
+        population[random].setFinancialLoss(500);
+        population[random].setStressLevel(0.3);
+        population[random].setTrustIndex(-0.2);
+    }
 
     
 

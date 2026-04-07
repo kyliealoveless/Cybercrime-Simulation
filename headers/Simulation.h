@@ -26,8 +26,6 @@ class Simulation {
         void recordSnapShot(); // MY FAVORITE ADDITION!! the simulation is running... so what? Here is where the impact is documented (day 0, day 30, day 90, day 180, final results)
         void runSimulation (int duration, int num_individuals); // the start button essentially. Also I can manipulate how long the simulation will run for (6 months).
 
-
-
 };
 
 #endif
