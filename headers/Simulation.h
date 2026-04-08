@@ -16,6 +16,7 @@ class Simulation {
         int curr_day; // recording what day it is. Critical for the snapshots
         int total_victims; // recording how many victims are in the population right now, also crucial for the snapshots
         double total_financial_loss; // recording what the total financial loss is combining all individuals. The snapshot will deeply benefit from this
+        string cybercrime_type; // identifying what type of cybercrime is being used
 
     public:
         Simulation();

@@ -36,7 +36,14 @@ void Simulation::initializePopulation(int size){
 void Simulation::triggerCyberCrime(){
     // targets 3% of the population
     // randomized types of cyber crime (one must impact each individual assigned role: creators, individuals, employee, elderly)
+    // cyber crimes will consist of Malware, Phishing scams, piracy, and data breaches
+    // Based upon my research, phishing and data breaches are the most common cyber crime. This will affect what percentage the crime might occur. Malware is the next most reported cyber crime leaving piracy last.
+    // Keep in mind, this information is limited to REPORTED cyber crimes. Piracy is historically an under-reported crime.
+    // Phishing and Data Breaches: 50%
+    // Malware: 30%
+    // Piracy: 20%
 
+    
     // directly_impacted = 0.03% randomly distributed?
     // for (population of 1000) { /  rand 0.03 by 1000}
     //
@@ -52,20 +59,26 @@ void Simulation::triggerCyberCrime(){
 
         // using setters so I can access the private variables
         // applying new values to the variables when they are randomly assigned
+        // update variables dependant on what cyber crime is triggered
+        // if stress level gets to a certain point, job loss can occur. Maybe make it 50%
+
+        // if cybercrime is phising (50%), financial loss is average, stress level increases a lot, trust index increases a lot
+        // if cybercrime is data breaches (50%), financial loss is high, stress level increases a lot, trust index increases average
+        // if cybercrime is malware (30%), financial loss is moderate, stress level increases a lot, trust index increases slightly (this one affects businesses and employees)
+        // if cybercrime is piracy (20%), financial loss is slight to none (unless for creators), stress level increases very slightly, trust index stays the same
         population[random].setDirectlyImpacted(true);
         population[random].setFinancialLoss(500);
         population[random].setStressLevel(0.3);
         population[random].setTrustIndex(-0.2);
     }
 
-    
-
-}
+}    
 
 void Simulation::rippleEffect(){
     // 2-5% direct victimization rate per simulated event
     // financial loss will be proportionally scaled based on crime type
     // emotional distress values will be weighted based on literature findings
+    // connected people will apply here to show how directly impacted victims affect others
 
 }
 
@@ -110,6 +123,7 @@ void Simulation::runSimulation(int duration, int num_individuals){
 
 
     // Include Community Impact Summary
+    // make it into a csv file
 
     // Total Days: 180
 

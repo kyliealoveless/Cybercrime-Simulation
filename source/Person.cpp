@@ -23,6 +23,10 @@ Person::Person(int id, string role){
 void Person::applyFinancialLoss(double amount){
     // as different cybercrimes are impacting individuals, a potential financial loss will be added to their role. An event such as job loss will additionally contribute to financial loss.
 
+    // different cybercrimes will have different financial impacts
+
+    
+
 }
 
 void Person::increaseStress(double amount){
