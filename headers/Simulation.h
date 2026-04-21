@@ -20,11 +20,13 @@ class Simulation {
 
     public:
         Simulation();
+        ofstream file; // this is for the snapshots, I want to be able to write to a file to record the data from the simulation
         void initializePopulation(int size); // how I can manipulate the size of the population. Should stay at 1000 but who knows
+        void assignConnections(); // this is where I will assign the connections for each individual. This is critical for the ripple effect and showing how cybercrime affects more than just the direct victim
         void triggerCyberCrime(); // incorporating cybercrimes into the simulation. Without this there is no CYBERCRIME simulation
         void rippleEffect(); // adding a ripple effect into the community. This generates the impact of social harm and furthers the point I will make at the end
         void updateRecovery(); // depending on the individual's situation, their recovery time will be altered
-        void recordSnapShot(); // MY FAVORITE ADDITION!! the simulation is running... so what? Here is where the impact is documented (day 0, day 30, day 90, day 180, final results)
+        void recordSnapShot(int day); // MY FAVORITE ADDITION!! the simulation is running... so what? Here is where the impact is documented (day 0, day 30, day 90, day 180, final results)
         void runSimulation (int duration, int num_individuals); // the start button essentially. Also I can manipulate how long the simulation will run for (6 months).
 
 };

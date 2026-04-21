@@ -33,6 +33,24 @@ void Simulation::initializePopulation(int size){
     
 }
 
+void Simulation::assignConnections(){
+    // this is where I will assign the connections for each individual. This is critical for the ripple effect and showing how cybercrime affects more than just the direct victim
+
+    // each individual will have a range of 5-10 connections. The range will be randomized per individual.
+
+    for (int i = 0; i < population.size(); i++) {
+        int num_connections = rand() % 6 + 5; // random number between 5 and 10
+        vector<int> connections;
+
+        for (int j = 0; j < num_connections; j++) {
+            int connection_id = rand() % population.size(); // random connection from the population
+            connections.push_back(connection_id);
+        }
+
+        population[i].setConnectedPeople(connections); // setting the connections for the individual
+    }
+}
+
 void Simulation::triggerCyberCrime(){
     // targets 3% of the population
     // randomized types of cyber crime (one must impact each individual assigned role: creators, individuals, employee, elderly)
@@ -80,6 +98,41 @@ void Simulation::rippleEffect(){
     // emotional distress values will be weighted based on literature findings
     // connected people will apply here to show how directly impacted victims affect others
 
+    for (int i = 0; i < population.size(); i++) {
+
+        if (population[i].isDirectlyImpacted()) {
+            vector<int> connections = population[i].getConnectedPeople();
+
+            for (int j = 0; j < connections.size(); j++) {
+
+                int connection_id = connections[j];
+                // if the directly impacted victim has a connection, that connection will be affected by the ripple effect
+                // this is where the social harm is shown and how cybercrime affects more than just the direct victim
+
+                // for example, if a person is directly impacted by a cybercrime, their connections will have a 10% chance of being indirectly impacted. This can be adjusted based on research findings.
+
+           
+                int chance = rand() % 100; // random number between 0 and 99
+
+                if (chance < 3) { // 3% chance of being indirectly impacted to simulate the slow spread of cybercrime impact through social connections
+
+                    // applying the ripple effect on the connected individual
+                    // the impact will be less severe than the direct victim but still significant to show the social harm of cybercrime
+                    double newLoss = population[connection_id].getFinancialLoss() + 100;
+                    // updating the connected individual's variables based on the ripple effect
+                    population[connection_id].setFinancialLoss(newLoss);
+                    population[connection_id].increaseStress(0.1); // this is a moderate increase in stress to show the impact of being connected to a victim of cybercrime
+                    population[connection_id].decreaseTrust(0.5); // this is a significant decrease in trust to show the impact of being connected to a victim of cybercrime
+
+                    // mark as impacted
+                    if (!population[connection_id].isDirectlyImpacted()) {
+                        population[connection_id].setDirectlyImpacted(true);
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 void Simulation::updateRecovery(){
@@ -87,18 +140,18 @@ void Simulation::updateRecovery(){
 
 }
 
-void Simulation::recordSnapShot(){
+void Simulation::recordSnapShot(int day){
 
     
 // output the snapshots in csv files. This allows easy transition to excel which allows graphing!
 // https://stackoverflow.com/questions/25201131/writing-csv-files-from-c#:~:text=6%20Answers,2%2C5121%2019%2025 
 // https://www.youtube.com/watch?v=LfiQj_X-pkA 
 
-    ofstream snapshot_File("Snapshots.csv");
+    file.open("Snapshots.csv");
 
-    if (snapshot_File.is_open()) {
+    if (file.is_open()) {
         // this is the header row:
-        snapshot_File << "Day,Total_Victims,Total_Loss,Avg_Stress,Avg_Trust,Job_Loss" << endl;
+        file << "Day,Total_Victims,Total_Loss,Avg_Stress,Avg_Trust,Job_Loss" << endl;
 
         // these are the data rows:
         // examples: 
@@ -106,6 +159,10 @@ void Simulation::recordSnapShot(){
         // Day 30: snapshot_File << "30,40,3300.0,0.3,0.6,2" << endl;
 
         // I am thinking that to do this I have to include specific variables that are constantly updated
+
+        file << day << "," << total_victims << "," << total_financial_loss << "," << "avg_stress" << "," << "avg_trust" << "," << "job_loss" << endl;
+
+        file.close();
     }
 
     // total_individuals = individuals.size();
@@ -150,5 +207,13 @@ void Simulation::runSimulation(int duration, int num_individuals){
     // Indirect Victims: __
     // Average Stress: __%
     // Average Loss: $__
+
+    recordSnapShot(0); // initial snapshot before any cybercrime occurs
+
+    for (int day = 30; day <=100; day += 30) {
+        rippleEffect(); // applying the ripple effect to show the social harm of cybercrime
+        updateRecovery(); // updating the recovery status of individuals based on their recovery time and any additional events that may occur
+        recordSnapShot(day); // recording the snapshot at the specified day
+    }
 
 }

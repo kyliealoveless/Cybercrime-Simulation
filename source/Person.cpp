@@ -32,12 +32,15 @@ void Person::applyFinancialLoss(double amount){
 void Person::increaseStress(double amount){
     // as cybercrimes and events impact individuals, their stress will increase by 0.1
     // maybe there could be something that gives an alert when an individual's stress has maxed out
+    stress_level += amount;
+    if (stress_level > 1.0) stress_level = 1.0;
 
 }
 
 void Person::decreaseTrust(double amount){
     // as cybercrimes impact individuals, their trust in digital systems will decrease by a certain amount (unknown amount)
-
+    trust_index -= amount;
+    if (trust_index < 0.0) trust_index = 0.0;
 }
 
 void Person::recoverOneMonth(){
@@ -71,7 +74,7 @@ void Person::setDirectlyImpacted(bool impacted){
 }
 
 void Person::setFinancialLoss(double amount){
-    this->financial_loss = amount;
+    this->financial_loss += amount;
 }
 
 void Person::setStressLevel(double amount){
