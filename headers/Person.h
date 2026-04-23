@@ -20,10 +20,17 @@ class Person {
         bool directly_impacted; // determines whether the individual is someone directly impacted or further removed from the incident
         vector<int> connected_people; // This vector will add all the people will be indirectly affected by the cybercrime depending on the people they are connected to. (this is me trying to make this as accurate to real life as possible)
             // each individual will have a range of 5-10 connections. The range will be randomized per individual.
-    
+        // after conversations with a professor from a different school, I have decided to include risk-based targeting. This means that certain individuals will be more likely to be targeted by cybercrime based on their role and other factors. There are different variables that create a susceptible target such as digital literacy, online exposure, and more. This will be reflected in the simulation by assigning different probabilities of being targeted to different roles. For example, elderly individuals might have a higher probability of being targeted due to lower digital literacy, while creators might have a higher probability due to their online exposure.
+        double digital_literacy; // this variable will represent the individual's digital literacy level, which can affect their susceptibility to cybercrime. It will be a value between 0 and 1, with higher values indicating higher digital literacy.
+        double online_exposure; // this variable will represent the individual's level of online exposure, which
+        double scam_susceptibility; // this variable will represent the individual's susceptibility to scams, which can be influenced by factors such as age, digital literacy, and online behavior. It will be a value between 0 and 1, with higher values indicating higher susceptibility.
+        double risk_score; // this variable will represent the individual's overall risk score for being targeted by cybercrime, which can be calculated based on their digital literacy, online exposure, and scam susceptibility. It will be a value between 0 and 1, with higher values indicating higher risk.
+
+
     public:
         Person();
         Person(int id, string role);
+        double calculateRiskScore(); // this method will calculate the individual's risk score based on their digital literacy, online exposure, and scam susceptibility. The formula for this can be adjusted based on research findings, but for this example, I will use a simple weighted average.
         void applyFinancialLoss(double amount); // when the issue occurs, here is where the financial loss is applied to the individual affected
         void increaseStress(double amount); // when some instance causes more stress to an individual, this is where that is manipulated.
         void decreaseTrust(double amount); // if a person is affected by cybercrime, their trust in digital systems decreases. This is where that is manipulated.
@@ -37,6 +44,9 @@ class Person {
         void setStressLevel(double amount);
         void setTrustIndex(double amount);
         void setConnectedPeople(vector<int> people);
+        void setRecoveryTime(int time) {
+            recovery_time = time;
+        }
 
         // getters
         int getId();

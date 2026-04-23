@@ -68,13 +68,19 @@ void Simulation::triggerCyberCrime(){
     //
 
     int victims = population.size() * 0.03; // the victims will be 3% of the population
+    int victim_count = 0;
 
-    for (int i = 0; i < victims; i++) {
-        // looping through the victims to assign a cyber crime effect on the variables
+    while (victim_count < victims) {
+        int i = rand() % population.size(); // random index in the population
 
-        // I want to randomize the 3% 
-        int random = rand() % population.size();
+        double risk = population[i].calculateRiskScore(); // calculating the individual's risk score based on their digital literacy, online exposure, and scam susceptibility
+        double roll = (rand() % 100) / 100.0;
 
+        if (!population[i].isDirectlyImpacted() && roll < risk) {
+            population[i].setDirectlyImpacted(true);
+            applyCrimeEffect(population[i]);
+            victim_count++;
+        }
         // using setters so I can access the private variables
         // applying new values to the variables when they are randomly assigned
         // update variables dependant on what cyber crime is triggered
@@ -84,13 +90,53 @@ void Simulation::triggerCyberCrime(){
         // if cybercrime is data breaches (50%), financial loss is high, stress level increases a lot, trust index increases average
         // if cybercrime is malware (30%), financial loss is moderate, stress level increases a lot, trust index increases slightly (this one affects businesses and employees)
         // if cybercrime is piracy (20%), financial loss is slight to none (unless for creators), stress level increases very slightly, trust index stays the same
-        population[random].setDirectlyImpacted(true);
-        population[random].setFinancialLoss(500);
-        population[random].setStressLevel(0.3);
-        population[random].setTrustIndex(-0.2);
     }
+}
 
-}    
+CyberCrimeType Simulation::getRandomCyberCrimeType() {
+    int roll = rand() % 100; // random number between 0 and 99
+
+    if (roll < 50) {
+        return phising; // 50% chance
+    } else if (roll < 80) {
+        return data_breach; // 30% chance
+    } else if (roll < 90) {
+        return malware; // 10% chance
+    } else {
+        return piracy; // 10% chance
+    }
+}
+
+// it is important to recognize that the way people are affected by cybercrime differs on different aspects such as the type of cybercrime, the individual's characteristics, and the social connections they have. This is why the ripple effect is so important to include in the simulation because it shows how cybercrime can affect not just the direct victim but also those around them. It also shows how different types of cybercrime can have different impacts on individuals and their social connections. This is critical for understanding the full scope of the harm caused by cybercrime and for developing effective strategies to mitigate that harm.
+void Simulation::applyCrimeEffect(Person &individual){
+    CyberCrimeType crime_type = getRandomCyberCrimeType(); // this function will randomly assign a cyber crime type based on the percentages mentioned above
+
+    if (crime_type == phising) {
+        individual.applyFinancialLoss(500); // this is an average financial loss for phishing scams
+        individual.increaseStress(0.6); // this is a significant increase in stress to show the impact of phishing scams
+        individual.decreaseTrust(0.4); // this is a significant decrease in trust to show the impact of phishing scams
+        individual.setRecoveryTime(6); // this is an average recovery time for phishing scams in months
+    } else if (crime_type == data_breach) {
+        individual.applyFinancialLoss(2000); // this is an average financial loss for data breaches
+        individual.increaseStress(0.7); // this is a significant increase in stress to show the impact of data breaches
+        individual.decreaseTrust(0.3); // this is a significant decrease in trust to show the impact of data breaches
+        individual.setRecoveryTime(12); // this is an average recovery time for data breaches in months
+    } else if (crime_type == malware) {
+        individual.applyFinancialLoss(1000); // this is an average financial loss for malware attacks
+        individual.increaseStress(0.5); // this is a significant increase in stress to show the impact of malware attacks
+        individual.decreaseTrust(0.2); // this is a moderate decrease in trust to show the impact of malware attacks
+        individual.setRecoveryTime(6); // this is an average recovery time for malware attacks in months
+    } else if (crime_type == piracy) {
+        if (individual.getRole() == "creators") {
+            individual.applyFinancialLoss(3000); // this is an average financial loss for creators affected by piracy
+            individual.increaseStress(0.2); // this is a moderate increase in stress to show the impact of piracy on creators
+        } else {
+            individual.applyFinancialLoss(100); // this is a slight financial loss for individuals affected by piracy (such as through identity theft or other related crimes)
+            individual.increaseStress(0.1); // this is a slight increase in stress to show the impact of piracy on individuals
+            individual.decreaseTrust(0.05); // this is a very slight decrease in trust to show the impact of piracy on individuals
+        }
+    }
+}   
 
 void Simulation::rippleEffect(){
     // 2-5% direct victimization rate per simulated event
@@ -112,31 +158,29 @@ void Simulation::rippleEffect(){
                 // for example, if a person is directly impacted by a cybercrime, their connections will have a 10% chance of being indirectly impacted. This can be adjusted based on research findings.
 
            
-                int chance = rand() % 100; // random number between 0 and 99
+                double chance = (double)(rand() % 100) / 100.0; // random number between 0 and 1
 
-                if (chance < 3) { // 3% chance of being indirectly impacted to simulate the slow spread of cybercrime impact through social connections
+                if (chance < 0.3) { // 30% chance of being indirectly impacted to simulate the slow spread of cybercrime impact through social connections
 
                     // applying the ripple effect on the connected individual
                     // the impact will be less severe than the direct victim but still significant to show the social harm of cybercrime
-                    double newLoss = population[connection_id].getFinancialLoss() + 100;
-                    // updating the connected individual's variables based on the ripple effect
-                    population[connection_id].setFinancialLoss(newLoss);
+                    population[connection_id].setFinancialLoss(100); // this is a slight financial loss to show the impact of being connected to a victim of cybercrime
                     population[connection_id].increaseStress(0.1); // this is a moderate increase in stress to show the impact of being connected to a victim of cybercrime
                     population[connection_id].decreaseTrust(0.5); // this is a significant decrease in trust to show the impact of being connected to a victim of cybercrime
 
-                    // mark as impacted
-                    if (!population[connection_id].isDirectlyImpacted()) {
-                        population[connection_id].setDirectlyImpacted(true);
                     }
                 }
             }
         }
-    }
 
 }
 
 void Simulation::updateRecovery(){
-
+    for (int i = 0; i < population.size(); i++) {
+        if (population[i].isDirectlyImpacted()) {
+            population[i].recoverOneMonth(); // this allows manipulation of how much time people have to recover, this can either add or decrease depending on the scenario.
+        }
+    }
 
 }
 
@@ -147,20 +191,47 @@ void Simulation::recordSnapShot(int day){
 // https://stackoverflow.com/questions/25201131/writing-csv-files-from-c#:~:text=6%20Answers,2%2C5121%2019%2025 
 // https://www.youtube.com/watch?v=LfiQj_X-pkA 
 
-    file.open("Snapshots.csv");
+    file.open("Snapshots.csv", ios::app); // open the file in append mode to add new snapshots without overwriting previous ones
 
     if (file.is_open()) {
         // this is the header row:
-        file << "Day,Total_Victims,Total_Loss,Avg_Stress,Avg_Trust,Job_Loss" << endl;
-
+        if (day == 0){
+            file << "Day,Total_Victims,Total_Loss,Avg_Stress,Avg_Trust,Job_Loss" << endl;
+        }
         // these are the data rows:
         // examples: 
         // Day 0: snapshot_File << "0,0,0.0,0.0,1.0,0" << endl;
         // Day 30: snapshot_File << "30,40,3300.0,0.3,0.6,2" << endl;
 
-        // I am thinking that to do this I have to include specific variables that are constantly updated
+        // reset totals before calculating
+        total_victims = 0;
+        total_financial_loss = 0;
 
-        file << day << "," << total_victims << "," << total_financial_loss << "," << "avg_stress" << "," << "avg_trust" << "," << "job_loss" << endl;
+        double total_stress = 0.0;
+        double total_trust = 0.0;
+
+        // loop through entire population to collect data
+        for (int i = 0; i < population.size(); i++) {
+
+            if (population[i].isDirectlyImpacted()) {
+                total_victims++;
+            }
+
+            total_financial_loss += population[i].getFinancialLoss();
+            total_stress += population[i].getStressLevel();
+            total_trust += population[i].getTrustIndex();
+        }
+
+        // calculate averages
+        double avg_stress = total_stress / population.size();
+        double avg_trust = total_trust / population.size();
+
+        // write ONE clean row
+        file << day << ","
+             << total_victims << ","
+             << total_financial_loss << ","
+             << avg_stress << ","
+             << avg_trust << endl;
 
         file.close();
     }

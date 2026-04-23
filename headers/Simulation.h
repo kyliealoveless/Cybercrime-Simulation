@@ -5,9 +5,17 @@
 #define SIMULATION_H
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include "Person.h"
 using namespace std; // again I don't want to further complex things so I'm utilizing this tool
+
+enum CyberCrimeType {
+    phising,
+    data_breach,
+    malware,
+    piracy
+};
 
 class Simulation {
 
@@ -26,6 +34,8 @@ class Simulation {
         void triggerCyberCrime(); // incorporating cybercrimes into the simulation. Without this there is no CYBERCRIME simulation
         void rippleEffect(); // adding a ripple effect into the community. This generates the impact of social harm and furthers the point I will make at the end
         void updateRecovery(); // depending on the individual's situation, their recovery time will be altered
+        CyberCrimeType getRandomCyberCrimeType(); // this function will randomly assign a cyber crime type based on the percentages mentioned above
+        void applyCrimeEffect(Person &individual); // this is where the specific effects of the cyber crime will be applied to the individual's variables based on the type of cyber crime they are affected by. This will be determined by another randomization process that assigns a cyber crime type to the individual based on the percentages mentioned above.
         void recordSnapShot(int day); // MY FAVORITE ADDITION!! the simulation is running... so what? Here is where the impact is documented (day 0, day 30, day 90, day 180, final results)
         void runSimulation (int duration, int num_individuals); // the start button essentially. Also I can manipulate how long the simulation will run for (6 months).
 

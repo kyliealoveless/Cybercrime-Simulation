@@ -18,6 +18,20 @@ Person::Person(int id, string role){
     directly_impacted = false;
     income = 0.0; // I want income to vary based on role 
 
+    // including the risk-based targeting variables
+    digital_literacy = (rand() % 100) / 100.0; // random value between 0 and 1
+    online_exposure = (rand() % 100) / 100.0; // random value between 0 and 1
+    scam_susceptibility = (rand() % 100) / 100.0; // random value between 0 and 1
+    // now there needs to be a way to calculate the risk score based on these variables. I will use a simple weighted average for this example, but it can be adjusted based on research findings.
+
+}
+
+double Person::calculateRiskScore(){
+    // this method will calculate the individual's risk score based on their digital literacy, online exposure, and scam susceptibility. The formula for this can be adjusted based on research findings, but for this example, I will use a simple weighted average.
+
+    risk_score = (0.4 * (1 - digital_literacy)) + (0.3 * online_exposure) + (0.3 * scam_susceptibility);
+
+    return risk_score;
 }
 
 void Person::applyFinancialLoss(double amount){
@@ -45,7 +59,15 @@ void Person::decreaseTrust(double amount){
 
 void Person::recoverOneMonth(){
     // if another event occurs to this individual, recovery time will increase by one month to simulate real social harm
-
+    if (recovery_time > 0) {
+        recovery_time --;
+        
+        stress_level *= 0.9; // faster recovery if no additional events occur, this is just an example and can be adjusted based on research findings
+        trust_index += 0.02; // slower rebuilding of trust, this is just an example and can be adjusted based on research findings
+        
+        if (trust_index > 1.0) trust_index = 1.0;
+    }
+    
 }
 
 bool Person::isRecovered(){

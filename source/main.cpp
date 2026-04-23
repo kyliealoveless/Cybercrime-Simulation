@@ -18,8 +18,10 @@ int main() {
 
     Simulation SocialHarmImpact;
     SocialHarmImpact.initializePopulation(1000);
+    SocialHarmImpact.assignConnections();
     SocialHarmImpact.triggerCyberCrime();
-    // SocialHarmImpact.runSimulation(180, 1000); // running the simulation for 180 days and 1000 individuals
+    remove("Snapshots.csv"); // this is to ensure that every time the simulation is run, the snapshots are reset and not appended to previous runs
+    SocialHarmImpact.runSimulation(180, 1000); // running the simulation for 180 days and 1000 individuals
     
     return 0;
 
