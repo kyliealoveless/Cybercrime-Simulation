@@ -17,6 +17,7 @@ Person::Person(int id, string role){
     recovery_time = 0;
     directly_impacted = false;
     income = 0.0; // I want income to vary based on role 
+    exposure_count = 0; // this will be calculated based on the number of connections and the average online exposure of those connections
 
     // including the risk-based targeting variables
     digital_literacy = (rand() % 100) / 100.0; // random value between 0 and 1

@@ -19,10 +19,11 @@ int main() {
     Simulation SocialHarmImpact;
     SocialHarmImpact.initializePopulation(1000);
     SocialHarmImpact.assignConnections();
-    SocialHarmImpact.triggerCyberCrime();
     remove("Snapshots.csv"); // this is to ensure that every time the simulation is run, the snapshots are reset and not appended to previous runs
     SocialHarmImpact.runSimulation(180, 1000); // running the simulation for 180 days and 1000 individuals
-    
+    SocialHarmImpact.finalSummary(); // this will give a final summary of the impact of cybercrime on the community after the simulation is complete
     return 0;
 
+
+    
 }

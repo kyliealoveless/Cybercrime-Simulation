@@ -76,11 +76,15 @@ void Simulation::triggerCyberCrime(){
         double risk = population[i].calculateRiskScore(); // calculating the individual's risk score based on their digital literacy, online exposure, and scam susceptibility
         double roll = (rand() % 100) / 100.0;
 
-        if (!population[i].isDirectlyImpacted() && roll < risk) {
-            population[i].setDirectlyImpacted(true);
-            applyCrimeEffect(population[i]);
-            victim_count++;
+         if (roll < risk) { // if the random roll is less than the individual's risk score, they will be affected by cybercrime
+            if (!population[i].isDirectlyImpacted()) {
+                population[i].setDirectlyImpacted(true);
+                victim_count++; // incrementing the victim count only if the individual was not previously directly impacted
+            }
+            applyCrimeEffect(population[i]); // applying the specific effects of the cyber crime to the individual's variables based on the type of cyber crime they are affected by
         }
+    
+
         // using setters so I can access the private variables
         // applying new values to the variables when they are randomly assigned
         // update variables dependant on what cyber crime is triggered
@@ -108,7 +112,7 @@ CyberCrimeType Simulation::getRandomCyberCrimeType() {
 }
 
 // it is important to recognize that the way people are affected by cybercrime differs on different aspects such as the type of cybercrime, the individual's characteristics, and the social connections they have. This is why the ripple effect is so important to include in the simulation because it shows how cybercrime can affect not just the direct victim but also those around them. It also shows how different types of cybercrime can have different impacts on individuals and their social connections. This is critical for understanding the full scope of the harm caused by cybercrime and for developing effective strategies to mitigate that harm.
-void Simulation::applyCrimeEffect(Person &individual){
+void Simulation::applyCrimeEffect(Person &individual){ // referencing my past Data Structures Final Project "Amusement Park Simulation", we had a similar function to apply the effects of different ticket types on the visitors in the park. This function will apply the specific effects of the cyber crime to the individual's variables based on the type of cyber crime they are affected by. This will be determined by another randomization process that assigns a cyber crime type to the individual based on the percentages mentioned above.
     CyberCrimeType crime_type = getRandomCyberCrimeType(); // this function will randomly assign a cyber crime type based on the percentages mentioned above
 
     if (crime_type == phising) {
@@ -168,11 +172,14 @@ void Simulation::rippleEffect(){
                     population[connection_id].increaseStress(0.1); // this is a moderate increase in stress to show the impact of being connected to a victim of cybercrime
                     population[connection_id].decreaseTrust(0.5); // this is a significant decrease in trust to show the impact of being connected to a victim of cybercrime
 
+                    if (population[connection_id].getStressLevel() > 0.7) {
+                        population[connection_id].setDirectlyImpacted(true);
+
                     }
                 }
             }
         }
-
+    }
 }
 
 void Simulation::updateRecovery(){
@@ -190,6 +197,8 @@ void Simulation::recordSnapShot(int day){
 // output the snapshots in csv files. This allows easy transition to excel which allows graphing!
 // https://stackoverflow.com/questions/25201131/writing-csv-files-from-c#:~:text=6%20Answers,2%2C5121%2019%2025 
 // https://www.youtube.com/watch?v=LfiQj_X-pkA 
+// https://hyperskill.org/learn/step/37563
+// https://cplusplus.com/forum/beginner/101911/
 
     file.open("Snapshots.csv", ios::app); // open the file in append mode to add new snapshots without overwriting previous ones
 
@@ -232,6 +241,7 @@ void Simulation::recordSnapShot(int day){
              << total_financial_loss << ","
              << avg_stress << ","
              << avg_trust << endl;
+             // add job loss
 
         file.close();
     }
@@ -281,10 +291,142 @@ void Simulation::runSimulation(int duration, int num_individuals){
 
     recordSnapShot(0); // initial snapshot before any cybercrime occurs
 
-    for (int day = 30; day <=100; day += 30) {
+    for (int day = 30; day <=180; day += 30) {
+        triggerCyberCrime(); // triggering cybercrime events to show the impact on the community
+
         rippleEffect(); // applying the ripple effect to show the social harm of cybercrime
         updateRecovery(); // updating the recovery status of individuals based on their recovery time and any additional events that may occur
         recordSnapShot(day); // recording the snapshot at the specified day
     }
 
+}
+
+void Simulation::finalSummary() { // this will give a final summary of the impact of cybercrime on the community after the simulation is complete
+
+
+    final_file.open("Final_Summary.csv");
+
+    if (!final_file.is_open()) {
+        return;
+    }
+
+    final_file << "Group,Direct_Victims,Indirect_Victims,Avg_Stress,Avg_Loss\n";
+
+    // creators summary variables
+    int creators_direct = 0;
+    int creators_indirect = 0;
+    double creators_stress = 0;
+    double creators_loss = 0;
+    int creators_count = 0;
+
+    // employees summary variables
+    int employees_direct = 0;
+    int employees_indirect = 0;
+    double employees_stress = 0;
+    double employees_loss = 0;
+    int employees_count = 0;
+
+    // individuals summary variables
+    int individuals_direct = 0;
+    int individuals_indirect = 0;
+    double individuals_stress = 0;
+    double individuals_loss = 0;
+    int individuals_count = 0;
+
+    // elderly summary variables
+    int elderly_direct = 0;
+    int elderly_indirect = 0;
+    double elderly_stress = 0;
+    double elderly_loss = 0;
+    int elderly_count = 0;
+
+    // loop through the population to calculate the summary data for each group
+    for (int i = 0; i < population.size(); i++) {
+
+        Person p = population[i];
+
+        string role = p.getRole();
+        bool direct = p.isDirectlyImpacted();
+        bool indirect = (!direct && p.getStressLevel() > 0.3);
+
+        double stress = p.getStressLevel();
+        double loss = p.getFinancialLoss();
+
+        // creators will have a higher financial loss and stress level due to the impact of piracy, while individuals will have a lower financial loss and stress level. Employees and elderly will fall somewhere in between depending on the type of cybercrime they were affected by and their individual characteristics.   
+        if (role == "creators") {
+            creators_count++;
+            creators_stress += stress;
+            creators_loss += loss;
+
+            if (direct) creators_direct++;
+            else if (indirect) creators_indirect++;
+        }
+
+        // employees will have a higher financial loss and stress level due to the impact of malware and data breaches, while individuals will have a lower financial loss and stress level. Creators and elderly will fall somewhere in between depending on the type of cybercrime they were affected by and their individual characteristics.
+        else if (role == "employees") {
+            employees_count++;
+            employees_stress += stress;
+            employees_loss += loss;
+
+            if (direct) employees_direct++;
+            else if (indirect) employees_indirect++;
+        }
+
+        // individuals will have a lower financial loss and stress level due to the impact of phishing and piracy, while creators will have a higher financial loss and stress level. Employees and elderly will fall somewhere in between depending on the type of cybercrime they were affected by and their individual characteristics.
+        else if (role == "individuals") {
+            individuals_count++;
+            individuals_stress += stress;
+            individuals_loss += loss;
+
+            if (direct) individuals_direct++;
+            else if (indirect) individuals_indirect++;
+        }
+
+        // elderly will have a higher financial loss and stress level due to the impact of phishing and data breaches, while individuals will have a lower financial loss and stress level. Creators and employees will fall somewhere in between depending on the type of cybercrime they were affected by and their individual characteristics.
+        else if (role == "elderly") {
+            elderly_count++;
+            elderly_stress += stress;
+            elderly_loss += loss;
+
+            if (direct) elderly_direct++;
+            else if (indirect) elderly_indirect++;
+        }
+    }
+
+    // csv file output for the final summary
+
+    // this will show the final impact of cybercrime on the community after the simulation is complete, broken down by group. It will show the number of direct and indirect victims, the average stress level, and the average financial loss for each group. This will allow for a clear comparison of how different groups were affected by cybercrime and can help to highlight any disparities in the impact of cybercrime on different segments of the population.
+    if (creators_count > 0) {
+        final_file << "Creators,"
+                   << creators_direct << ","
+                   << creators_indirect << ","
+                   << (creators_stress / creators_count) << ","
+                   << (creators_loss / creators_count) << "\n";
+    }
+
+    if (employees_count > 0) {
+        final_file << "Employees,"
+                   << employees_direct << ","
+                   << employees_indirect << ","
+                   << (employees_stress / employees_count) << ","
+                   << (employees_loss / employees_count) << "\n";
+    }
+
+    if (individuals_count > 0) {
+        final_file << "Individuals,"
+                   << individuals_direct << ","
+                   << individuals_indirect << ","
+                   << (individuals_stress / individuals_count) << ","
+                   << (individuals_loss / individuals_count) << "\n";
+    }
+
+    if (elderly_count > 0) {
+        final_file << "Elderly,"
+                   << elderly_direct << ","
+                   << elderly_indirect << ","
+                   << (elderly_stress / elderly_count) << ","
+                   << (elderly_loss / elderly_count) << "\n";
+    }
+
+    final_file.close();
 }

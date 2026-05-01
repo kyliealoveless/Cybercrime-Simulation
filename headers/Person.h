@@ -25,7 +25,7 @@ class Person {
         double online_exposure; // this variable will represent the individual's level of online exposure, which
         double scam_susceptibility; // this variable will represent the individual's susceptibility to scams, which can be influenced by factors such as age, digital literacy, and online behavior. It will be a value between 0 and 1, with higher values indicating higher susceptibility.
         double risk_score; // this variable will represent the individual's overall risk score for being targeted by cybercrime, which can be calculated based on their digital literacy, online exposure, and scam susceptibility. It will be a value between 0 and 1, with higher values indicating higher risk.
-
+        int exposure_count; // this is an addition that ensures that the more connected an individual is to others, the higher their online exposure and therefore the higher their risk score. This will be calculated based on the number of connections they have and the average online exposure of those connections.
 
     public:
         Person();
