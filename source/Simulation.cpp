@@ -4,6 +4,7 @@
 
 // Referencing my past Data Structures Final Project "Amusement Park Simulation"
 
+
 Simulation::Simulation(){
     // constructor
 }
@@ -77,6 +78,8 @@ void Simulation::triggerCyberCrime(){
         double roll = (rand() % 100) / 100.0;
 
          if (roll < risk) { // if the random roll is less than the individual's risk score, they will be affected by cybercrime
+            // this is to show the victims and their risk scores for testing purposes
+            cout << "Victim ID: " << population[i].getId() << ", Role: " << population[i].getRole() << ", Risk Score: " << risk << endl;
             if (!population[i].isDirectlyImpacted()) {
                 population[i].setDirectlyImpacted(true);
                 victim_count++; // incrementing the victim count only if the individual was not previously directly impacted
@@ -90,7 +93,7 @@ void Simulation::triggerCyberCrime(){
         // update variables dependant on what cyber crime is triggered
         // if stress level gets to a certain point, job loss can occur. Maybe make it 50%
 
-        // if cybercrime is phising (50%), financial loss is average, stress level increases a lot, trust index increases a lot
+        // if cybercrime is phishing (50%), financial loss is average, stress level increases a lot, trust index increases a lot
         // if cybercrime is data breaches (50%), financial loss is high, stress level increases a lot, trust index increases average
         // if cybercrime is malware (30%), financial loss is moderate, stress level increases a lot, trust index increases slightly (this one affects businesses and employees)
         // if cybercrime is piracy (20%), financial loss is slight to none (unless for creators), stress level increases very slightly, trust index stays the same
@@ -101,7 +104,7 @@ CyberCrimeType Simulation::getRandomCyberCrimeType() {
     int roll = rand() % 100; // random number between 0 and 99
 
     if (roll < 50) {
-        return phising; // 50% chance
+        return phishing; // 50% chance
     } else if (roll < 80) {
         return data_breach; // 30% chance
     } else if (roll < 90) {
@@ -115,22 +118,30 @@ CyberCrimeType Simulation::getRandomCyberCrimeType() {
 void Simulation::applyCrimeEffect(Person &individual){ // referencing my past Data Structures Final Project "Amusement Park Simulation", we had a similar function to apply the effects of different ticket types on the visitors in the park. This function will apply the specific effects of the cyber crime to the individual's variables based on the type of cyber crime they are affected by. This will be determined by another randomization process that assigns a cyber crime type to the individual based on the percentages mentioned above.
     CyberCrimeType crime_type = getRandomCyberCrimeType(); // this function will randomly assign a cyber crime type based on the percentages mentioned above
 
-    if (crime_type == phising) {
+    if (crime_type == phishing) {
+        // testing
+        cout << "Crime Type Applied: Phishing" << endl;
         individual.applyFinancialLoss(500); // this is an average financial loss for phishing scams
         individual.increaseStress(0.6); // this is a significant increase in stress to show the impact of phishing scams
         individual.decreaseTrust(0.4); // this is a significant decrease in trust to show the impact of phishing scams
         individual.setRecoveryTime(6); // this is an average recovery time for phishing scams in months
     } else if (crime_type == data_breach) {
+        // testing 
+        cout << "Crime Type Applied: Data Breach" << endl;
         individual.applyFinancialLoss(2000); // this is an average financial loss for data breaches
         individual.increaseStress(0.7); // this is a significant increase in stress to show the impact of data breaches
         individual.decreaseTrust(0.3); // this is a significant decrease in trust to show the impact of data breaches
         individual.setRecoveryTime(12); // this is an average recovery time for data breaches in months
     } else if (crime_type == malware) {
+        // testing
+        cout << "Crime Type Applied: Malware" << endl;
         individual.applyFinancialLoss(1000); // this is an average financial loss for malware attacks
         individual.increaseStress(0.5); // this is a significant increase in stress to show the impact of malware attacks
         individual.decreaseTrust(0.2); // this is a moderate decrease in trust to show the impact of malware attacks
         individual.setRecoveryTime(6); // this is an average recovery time for malware attacks in months
     } else if (crime_type == piracy) {
+        // testing
+        cout << "Crime Type Applied: Piracy" << endl;
         if (individual.getRole() == "creators") {
             individual.applyFinancialLoss(3000); // this is an average financial loss for creators affected by piracy
             individual.increaseStress(0.2); // this is a moderate increase in stress to show the impact of piracy on creators
@@ -165,7 +176,8 @@ void Simulation::rippleEffect(){
                 double chance = (double)(rand() % 100) / 100.0; // random number between 0 and 1
 
                 if (chance < 0.3) { // 30% chance of being indirectly impacted to simulate the slow spread of cybercrime impact through social connections
-
+                    // testing
+                    cout << "Ripple effect spread from person ID: " << population[i].getId() << " to connection ID: " << connection_id << endl;
                     // applying the ripple effect on the connected individual
                     // the impact will be less severe than the direct victim but still significant to show the social harm of cybercrime
                     population[connection_id].setFinancialLoss(100); // this is a slight financial loss to show the impact of being connected to a victim of cybercrime
@@ -241,9 +253,16 @@ void Simulation::recordSnapShot(int day){
              << total_financial_loss << ","
              << avg_stress << ","
              << avg_trust << endl;
-             // add job loss
+             // I was unable to calculate job loss due to time constraints. Maybe a future project to include this while making other improvements.
+
+        // testing
+        cout << " Snapshot recorded for day: " << day << endl;
+        cout << " Total Victims: " << total_victims << endl;
+        cout << " Total Financial Loss: $" << total_financial_loss << endl;
 
         file.close();
+
+    
     }
 
     // total_individuals = individuals.size();
@@ -257,8 +276,8 @@ void Simulation::recordSnapShot(int day){
 
 }
 
-void Simulation::runSimulation(int duration, int num_individuals){
-
+void Simulation::runSimulation(int duration){
+// for some formatting and bugging issues I ran this through AI to get some assistance. I was unsure of how else to go about this.
 
     // Include Community Impact Summary
     // make it into a csv file
@@ -292,6 +311,7 @@ void Simulation::runSimulation(int duration, int num_individuals){
     recordSnapShot(0); // initial snapshot before any cybercrime occurs
 
     for (int day = 30; day <=180; day += 30) {
+        // it became challenging to figure out spacing for the snapshots, I wanted to show the impact of cybercrime over time but I also wanted to make sure the snapshots were not too close together that they showed the same data and not too far apart that they missed important changes in the data. I decided on every 30 days because it allows for enough time to see changes in the data while also showing the progression of the impact of cybercrime over time. It also allows for a clear comparison between the different snapshots to see how the impact of cybercrime evolves over time. I know this is different from the 0,30,90,180 but this allows for a more consistent spacing between the snapshots and a clearer visualization of the data.
         triggerCyberCrime(); // triggering cybercrime events to show the impact on the community
 
         rippleEffect(); // applying the ripple effect to show the social harm of cybercrime
@@ -302,7 +322,6 @@ void Simulation::runSimulation(int duration, int num_individuals){
 }
 
 void Simulation::finalSummary() { // this will give a final summary of the impact of cybercrime on the community after the simulation is complete
-
 
     final_file.open("Final_Summary.csv");
 
@@ -358,8 +377,11 @@ void Simulation::finalSummary() { // this will give a final summary of the impac
             creators_stress += stress;
             creators_loss += loss;
 
-            if (direct) creators_direct++;
-            else if (indirect) creators_indirect++;
+            if (direct) {
+                creators_direct++;
+            } else if (indirect) {
+                creators_indirect++;
+            }
         }
 
         // employees will have a higher financial loss and stress level due to the impact of malware and data breaches, while individuals will have a lower financial loss and stress level. Creators and elderly will fall somewhere in between depending on the type of cybercrime they were affected by and their individual characteristics.
@@ -368,8 +390,11 @@ void Simulation::finalSummary() { // this will give a final summary of the impac
             employees_stress += stress;
             employees_loss += loss;
 
-            if (direct) employees_direct++;
-            else if (indirect) employees_indirect++;
+            if (direct) {
+                employees_direct++;
+            } else if (indirect) {
+                employees_indirect++;
+            }
         }
 
         // individuals will have a lower financial loss and stress level due to the impact of phishing and piracy, while creators will have a higher financial loss and stress level. Employees and elderly will fall somewhere in between depending on the type of cybercrime they were affected by and their individual characteristics.
@@ -378,8 +403,11 @@ void Simulation::finalSummary() { // this will give a final summary of the impac
             individuals_stress += stress;
             individuals_loss += loss;
 
-            if (direct) individuals_direct++;
-            else if (indirect) individuals_indirect++;
+            if (direct) {
+                individuals_direct++;
+            } else if (indirect) {
+                individuals_indirect++;
+            }
         }
 
         // elderly will have a higher financial loss and stress level due to the impact of phishing and data breaches, while individuals will have a lower financial loss and stress level. Creators and employees will fall somewhere in between depending on the type of cybercrime they were affected by and their individual characteristics.
@@ -388,8 +416,11 @@ void Simulation::finalSummary() { // this will give a final summary of the impac
             elderly_stress += stress;
             elderly_loss += loss;
 
-            if (direct) elderly_direct++;
-            else if (indirect) elderly_indirect++;
+            if (direct) {
+                elderly_direct++;
+            } else if (indirect) {
+                elderly_indirect++;
+            }
         }
     }
 
@@ -397,36 +428,24 @@ void Simulation::finalSummary() { // this will give a final summary of the impac
 
     // this will show the final impact of cybercrime on the community after the simulation is complete, broken down by group. It will show the number of direct and indirect victims, the average stress level, and the average financial loss for each group. This will allow for a clear comparison of how different groups were affected by cybercrime and can help to highlight any disparities in the impact of cybercrime on different segments of the population.
     if (creators_count > 0) {
-        final_file << "Creators,"
-                   << creators_direct << ","
-                   << creators_indirect << ","
-                   << (creators_stress / creators_count) << ","
-                   << (creators_loss / creators_count) << "\n";
+        final_file << "Creators," << creators_direct << "," << creators_indirect << "," << (creators_stress / creators_count) << "," << (creators_loss / creators_count) << "\n";
     }
 
     if (employees_count > 0) {
-        final_file << "Employees,"
-                   << employees_direct << ","
-                   << employees_indirect << ","
-                   << (employees_stress / employees_count) << ","
-                   << (employees_loss / employees_count) << "\n";
+        final_file << "Employees," << employees_direct << "," << employees_indirect << "," << (employees_stress / employees_count) << "," << (employees_loss / employees_count) << "\n";
     }
 
     if (individuals_count > 0) {
-        final_file << "Individuals,"
-                   << individuals_direct << ","
-                   << individuals_indirect << ","
-                   << (individuals_stress / individuals_count) << ","
-                   << (individuals_loss / individuals_count) << "\n";
+        final_file << "Individuals," << individuals_direct << "," << individuals_indirect << "," << (individuals_stress / individuals_count) << "," << (individuals_loss / individuals_count) << "\n";
     }
 
     if (elderly_count > 0) {
-        final_file << "Elderly,"
-                   << elderly_direct << ","
-                   << elderly_indirect << ","
-                   << (elderly_stress / elderly_count) << ","
-                   << (elderly_loss / elderly_count) << "\n";
+        final_file << "Elderly," << elderly_direct << "," << elderly_indirect << "," << (elderly_stress / elderly_count) << "," << (elderly_loss / elderly_count) << "\n";
     }
 
     final_file.close();
+
+    // testing
+    cout << endl;
+    cout << "Final summary generated! Check Final_Summary.csv for details." << endl;
 }

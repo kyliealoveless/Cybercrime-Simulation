@@ -1,5 +1,4 @@
 #include "..\headers\Person.h"
-#include "Person.h"
 
 Person::Person(){
     // constructor
@@ -39,10 +38,26 @@ void Person::applyFinancialLoss(double amount){
     // as different cybercrimes are impacting individuals, a potential financial loss will be added to their role. An event such as job loss will additionally contribute to financial loss.
 
     // different cybercrimes will have different financial impacts
+    
+    financial_loss += amount;
 
+    // losing money increases stress
+    stress_level += 0.05;
+
+    if (stress_level > 1.0){
+        stress_level = 1.0;
+    }
+
+    // losing money also lowers trust
+    trust_index -= 0.02;
+
+    if (trust_index < 0.0){
+        trust_index = 0.0;
+    }
+}
     
 
-}
+
 
 void Person::increaseStress(double amount){
     // as cybercrimes and events impact individuals, their stress will increase by 0.1
@@ -55,7 +70,10 @@ void Person::increaseStress(double amount){
 void Person::decreaseTrust(double amount){
     // as cybercrimes impact individuals, their trust in digital systems will decrease by a certain amount (unknown amount)
     trust_index -= amount;
-    if (trust_index < 0.0) trust_index = 0.0;
+    if (trust_index < 0.0) {
+        trust_index = 0.0;
+    }
+
 }
 
 void Person::recoverOneMonth(){
